@@ -1,0 +1,1035 @@
+/* ========================================
+   1. ROOT VARIABLES
+======================================== */
+
+:root {
+    --nav: #0b514d;                      /* header & footer (teal tua) */
+    --nav-glass: rgba(11, 81, 77, 0.85);
+    --teal: #7fbf9a;                     /* jade: warna border (dari Jade Sky) */
+    --jade-deep: #4f9a73;                /* jade tua: border saat fokus */
+    --jade-soft: #b7d98e;                /* hijau lime lembut dari Jade Sky */
+    --button: #087f78;                   /* tombol utama */
+    --mint: #eef1e6;
+    --green: #9bc294;
+    --pale: rgba(255, 255, 255, 0.55);   /* kotak di dalam body */
+    --lime: #c0e30e;                     /* aksen lime */
+    --on-nav: #17372b;                   /* teks di atas header/footer (hijau tua) */
+    --jade-glass: rgba(127, 191, 154, 0.55);  /* kaca jade untuk header & footer */
+    --on-green: #1f3322;
+    --ink: #253142;
+    --muted: #526071;
+    --placeholder: #cbd6e2;
+    --orange: #c0e30e;
+    --white: #fff;
+
+    /* Font gaya Apple: San Francisco di perangkat Apple, Inter di perangkat lain */
+    --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter",
+                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter",
+                    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+
+/* ========================================
+   2. GLOBAL STYLE
+======================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: #ecf4d6;      /* still background */
+    color: var(--ink);
+    font-family: var(--font-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Aurora background: port dari komponen AuroraBackground (aurora-background.tsx).
+   - warna diam (still)   : #ecf4d6  (body, + pita pemisah)
+   - warna bergerak       : #9ad0c2  (pita aurora yang bergeser pelan)
+   Satu lapisan tetap di belakang seluruh halaman. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: -10px;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.9;
+    filter: blur(10px);
+    will-change: background-position;
+
+    /* lapisan 1: pita pemisah warna diam, lapisan 2: pita aurora warna bergerak */
+    background-image:
+        repeating-linear-gradient(100deg,
+            #ecf4d6 0%, #ecf4d6 7%,
+            transparent 10%, transparent 12%,
+            #ecf4d6 16%),
+        repeating-linear-gradient(100deg,
+            #9ad0c2 10%,
+            #b9e0d5 15%,
+            #86c3b3 20%,
+            #cfe9df 25%,
+            #9ad0c2 30%);
+    background-size: 300% 100%, 300% 100%;
+    background-position: 50% 50%, 50% 50%;
+    animation: aurora 60s linear infinite;
+
+    /* gradasi radial: efek paling kuat di pojok kanan atas (showRadialGradient) */
+    -webkit-mask-image: radial-gradient(ellipse at 100% 0%, #000 10%, transparent 75%);
+    mask-image: radial-gradient(ellipse at 100% 0%, #000 10%, transparent 75%);
+}
+
+@keyframes aurora {
+    from { background-position: 50% 50%, 50% 50%; }
+    to   { background-position: 350% 50%, 350% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+}
+
+button,
+input,
+textarea {
+    font-family: inherit;
+}
+
+
+/* ========================================
+   3. HEADER & NAVBAR
+======================================== */
+
+header {
+    height: 72px;
+    background: var(--jade-glass);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    color: var(--on-nav);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Logo + nama website */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--on-nav);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.brand img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: block;
+}
+
+nav {
+    display: flex;
+    gap: 25px;
+}
+
+nav button {
+    border: 0;
+    background: transparent;
+    color: var(--on-nav);
+    font-size: 20px;
+    font-weight: 600;
+    padding: 8px 0;
+    cursor: pointer;
+    position: relative;
+}
+
+nav button:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    border-radius: 4px;
+    background: var(--nav);
+    transition: 0.25s;
+}
+
+nav button:hover:after,
+nav button.active:after {
+    width: 100%;
+}
+
+
+/* ========================================
+   4. MAIN CONTENT & PAGE TRANSITION
+======================================== */
+
+main {
+    min-height: calc(100vh - 128px);
+}
+
+.page {
+    display: none;
+    min-height: calc(100vh - 128px);
+    animation: pageIn 0.45s ease both;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0.25;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.inner {
+    padding: 26px 30px 34px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+
+/* ========================================
+   5. TYPOGRAPHY
+======================================== */
+
+h1, h2 {
+    font-family: var(--font-display);
+}
+
+h1 {
+    font-weight: 700;
+    letter-spacing: -0.03em;
+}
+
+h2 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+
+/* ========================================
+   6. FOOTER
+======================================== */
+
+footer {
+    height: 56px;
+    background: var(--jade-glass);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    color: var(--on-nav);
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    font-size: 16px;
+}
+
+
+/* ========================================
+   7. HOME PAGE
+======================================== */
+
+.hero {
+    background: transparent;
+    padding: 26px 30px 37px;
+}
+
+.hero h1 {
+    margin-bottom: 14px;
+}
+
+.hero p {
+    margin-bottom: 14px;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 14px;
+}
+
+
+/* Button: gaya liquid glass ada di bagian 11b */
+
+
+/* Hero Image */
+
+.hero-image,
+.exercise-image {
+    background: linear-gradient(135deg, rgba(183, 217, 142, 0.55), rgba(207, 233, 240, 0.75));
+    display: grid;
+    place-items: center;
+    color: #3d5a4a;
+    border-radius: 12px;
+}
+
+.hero-image {
+    height: 180px;
+    font-size: 16px;
+}
+
+
+/* Why First Step */
+
+.why {
+    padding: 27px 30px 35px;
+}
+
+.grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+}
+
+/* Sudut yang dianimasikan untuk border berputar */
+@property --border-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.dashed {
+    position: relative;
+    border: 3px solid rgba(127, 191, 154, 0.35);   /* jalur border yang diam */
+    border-radius: 18px;
+    background: var(--pale);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
+    backdrop-filter: blur(14px) saturate(160%);
+}
+
+/* Cahaya yang berputar mengelilingi border (hanya cincin 3px, isi kotak tidak tersentuh) */
+.dashed::before {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    padding: 3px;
+    border-radius: inherit;
+    background: conic-gradient(
+        from var(--border-angle),
+        transparent 0%,
+        transparent 55%,
+        #7fbf9a 70%,
+        #c0e30e 85%,
+        #7fbf9a 95%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+    animation: borderSpin 4s linear infinite;
+}
+
+@keyframes borderSpin {
+    to {
+        --border-angle: 360deg;
+    }
+}
+
+/* Hormati pengguna yang mematikan animasi di sistemnya */
+@media (prefers-reduced-motion: reduce) {
+    .dashed::before {
+        animation: none;
+    }
+}
+
+.feature {
+    padding: 20px 21px;
+    min-height: 88px;
+}
+
+.feature b {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.feature p {
+    font-size: 20px;
+}
+
+
+/* Popular Exercises */
+
+.popular {
+    padding: 20px 30px 26px;
+}
+
+.popular h2 {
+    margin-bottom: 15px;
+}
+
+.exercise-card {
+    padding: 17px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exercise-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(31, 51, 34, 0.12);
+}
+
+.exercise-image {
+    height: 120px;
+    margin-bottom: 10px;
+}
+
+.exercise-card b {
+    font-size: 20px;
+    display: block;
+}
+
+.exercise-card p {
+    font-size: 20px;
+}
+
+.all-button {
+    margin-top: 16px;
+}
+
+
+/* Challenge Home */
+
+.challenge-home {
+    background: rgba(255, 255, 255, 0.28);
+    padding: 27px 30px;
+}
+
+.challenge-home h2 {
+    margin-bottom: 14px;
+}
+
+
+/* ========================================
+   8. LATIHAN PAGE
+======================================== */
+
+.filters {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+}
+
+.filter {
+    border: 3px solid var(--teal);
+    border-radius: 30px;
+    background: white;
+    color: var(--ink);
+    padding: 7px 19px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filter.active,
+.filter:hover {
+    color: #fff;
+}
+
+.training-grid {
+    row-gap: 15px;
+}
+
+.training-grid .exercise-card {
+    padding: 17px;
+}
+
+.training-grid .exercise-image {
+    height: 120px;
+}
+
+
+/* 7 Days Challenge */
+
+.challenge-page {
+    background: rgba(255, 255, 255, 0.35);
+    padding: 27px 30px 30px;
+    margin: 25px -30px 0;
+}
+
+.challenge-page h1 {
+    margin-bottom: 17px;
+}
+
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.day {
+    height: 52px;
+    background: white;
+    border: 3px solid var(--teal);
+    border-radius: 12px;
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.day.done {
+    color: #fff;
+    font-weight: 700;
+}
+
+.progress {
+    height: 18px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    margin: 15px 0 14px;
+    overflow: hidden;
+}
+
+.progress span {
+    display: block;
+    width: 14.285%;
+    height: 100%;
+    background: linear-gradient(90deg, #7fbf9a, #4f9a73);
+    border-radius: 30px;
+    transition: width 0.4s;
+}
+
+
+/* ========================================
+   9. ABOUT PAGE
+======================================== */
+
+.about-box {
+    padding: 20px 21px;
+    margin-bottom: 15px;
+}
+
+.about-box b {
+    font-size: 20px;
+}
+
+.about-box p {
+    font-size: 20px;
+}
+
+.team-title {
+    margin: 16px 0 14px;
+}
+
+.team {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.member {
+    padding: 20px 21px;
+    min-width: 96px;
+    text-align: left;
+}
+
+.member p {
+    font-size: 20px;
+}
+
+.logo-note {
+    margin-top: 16px;
+    font-size: 20px;
+}
+
+
+/* ========================================
+   10. CONTACT PAGE
+======================================== */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.contact-box {
+    padding: 19px 18px;
+    min-height: 398px;
+}
+
+.contact-box h2 {
+    margin-bottom: 2px;
+}
+
+.contact-box p {
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.contact-box .group {
+    margin-top: 16px;
+}
+
+.contact-box .group p {
+    line-height: 1.16;
+}
+
+
+/* Contact Form */
+
+.field {
+    margin-bottom: 0;
+}
+
+.field label {
+    font-size: 20px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.field input,
+.field textarea {
+    width: 100%;
+    border: 3px solid var(--teal);
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 18px;
+    color: var(--ink);
+    font-family: inherit;
+    outline: none;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.field input {
+    height: 52px;
+}
+
+.field textarea {
+    height: 118px;
+    resize: vertical;
+}
+
+.field input:focus,
+.field textarea:focus {
+    border-color: var(--jade-deep);
+    box-shadow: 0 0 0 4px rgba(127, 191, 154, 0.35);
+}
+
+.send {
+    width: 100%;
+    margin-top: 1px;
+    text-align: left;
+    padding-left: 24px;
+}
+
+.demo-note {
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+
+/* ========================================
+   11. PROTOTYPE TOOLS & NOTIFICATION
+======================================== */
+
+#ripple {
+    display: none;
+}
+
+#prototype-tools {
+    position: fixed;
+    right: 16px;
+    bottom: 14px;
+    z-index: 40;
+    background: var(--nav);
+    color: white;
+    padding: 8px 10px;
+    border-radius: 30px;
+    box-shadow: 0 5px 20px #0003;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12px;
+}
+
+#prototype-tools button {
+    border: 0;
+    background: var(--lime);
+    color: var(--on-green);
+    border-radius: 22px;
+    padding: 9px 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+
+/* Toast */
+
+.toast {
+    position: fixed;
+    bottom: 75px;
+    left: 50%;
+    transform: translate(-50%, 15px);
+    opacity: 0;
+    background: var(--nav);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 30px;
+    transition: 0.25s;
+    z-index: 60;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+
+/* Modal */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #102c2bc0;
+    z-index: 30;
+    place-items: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: grid;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+    padding: 26px;
+    border-radius: 16px;
+    max-width: 430px;
+    width: 100%;
+    animation: pageIn 0.25s;
+}
+
+.modal-content p {
+    font-size: 18px;
+    margin: 12px 0 20px;
+}
+
+.close {
+    float: right;
+    border: 0;
+    background: var(--pale);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+/* ========================================
+   11b. LIQUID GLASS BUTTONS
+   Port dari komponen LiquidButton (liquid-glass-button.tsx)
+   Struktur sama dengan komponen asli:
+     - tombol transparan (bg-transparent)
+     - lapisan distorsi kaca  : backdrop-filter: url(#container-glass)
+     - lapisan tepi kaca      : rangkaian inset box-shadow
+     - hover: scale-105 selama 300ms
+   Berlaku untuk: .btn, .filter, .day, tombol Simulasi klik
+======================================== */
+
+:root {
+    /* Tepi kaca TEAL untuk latar terang */
+    --glass-ring:
+        0 0 6px rgba(10, 169, 159, 0.06),
+        0 2px 6px rgba(8, 127, 120, 0.12),
+        inset 3px 3px 0.5px -3px rgba(8, 127, 120, 0.9),
+        inset -3px -3px 0.5px -3px rgba(8, 127, 120, 0.85),
+        inset 1px 1px 1px -0.5px rgba(10, 169, 159, 0.7),
+        inset -1px -1px 1px -0.5px rgba(10, 169, 159, 0.7),
+        inset 0 0 6px 6px rgba(10, 169, 159, 0.14),
+        inset 0 0 2px 2px rgba(10, 169, 159, 0.08),
+        0 0 12px rgba(255, 255, 255, 0.15);
+
+    /* Tepi kaca TEAL terang untuk latar gelap */
+    --glass-ring-dark:
+        0 0 8px rgba(10, 169, 159, 0.10),
+        0 2px 6px rgba(0, 0, 0, 0.08),
+        inset 3px 3px 0.5px -3.5px rgba(94, 224, 210, 0.15),
+        inset -3px -3px 0.5px -3.5px rgba(94, 224, 210, 0.9),
+        inset 1px 1px 1px -0.5px rgba(94, 224, 210, 0.7),
+        inset -1px -1px 1px -0.5px rgba(94, 224, 210, 0.7),
+        inset 0 0 6px 6px rgba(94, 224, 210, 0.14),
+        inset 0 0 2px 2px rgba(94, 224, 210, 0.08),
+        0 0 12px rgba(10, 169, 159, 0.25);
+}
+
+.btn,
+.filter,
+.day,
+#prototype-tools button {
+    --tint: transparent;
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: nowrap;
+    background: var(--tint);
+    color: #0b514d;
+    border: 0;
+    border-radius: 980px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+/* Lapisan 1: distorsi + blur kaca (SVG filter #container-glass) */
+.btn::after,
+.filter::after,
+.day::after,
+#prototype-tools button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    overflow: hidden;
+    z-index: -2;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    backdrop-filter: blur(8px) saturate(160%);       /* cadangan untuk Safari/Firefox */
+    backdrop-filter: url("#container-glass");        /* Chrome / Edge */
+}
+
+/* Lapisan 2: tepi kaca (bayangan dalam) */
+.btn::before,
+.filter::before,
+.day::before,
+#prototype-tools button::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    z-index: -1;
+    pointer-events: none;
+    box-shadow: var(--glass-ring);
+    transition: box-shadow 0.3s;
+}
+
+.btn:hover,
+.filter:hover,
+.day:hover,
+#prototype-tools button:hover {
+    transform: scale(1.05);
+}
+
+/* Cahaya teal saat hover */
+.btn:hover::before,
+.filter:hover::before,
+.day:hover::before,
+#prototype-tools button:hover::before {
+    box-shadow: var(--glass-ring), 0 0 20px 3px rgba(10, 169, 159, 0.5);
+}
+
+.btn:active,
+.filter:active,
+.day:active,
+#prototype-tools button:active {
+    transform: scale(0.97);
+}
+
+.btn:focus-visible,
+.filter:focus-visible,
+.day:focus-visible {
+    outline: 3px solid rgba(10, 169, 159, 0.6);
+    outline-offset: 3px;
+}
+
+/* Tombol utama (ukuran xxl komponen: h-14 px-10) */
+.btn {
+    --tint: transparent;
+    height: 56px;
+    padding: 0 40px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #0b514d;
+}
+
+/* Tombol Kirim: teks rata kiri seperti desain Figma */
+.btn.send {
+    justify-content: flex-start;
+    padding-left: 24px;
+}
+
+/* Tombol Tentang Kami */
+.btn.orange {
+    --tint: transparent;
+    color: #1f3322;
+}
+
+/* Filter latihan */
+.filter {
+    --tint: transparent;
+    color: var(--ink);
+}
+
+.filter.active,
+.filter:hover {
+    --tint: transparent;
+    color: #0b514d;
+}
+
+.filter.active {
+    font-weight: 700;
+}
+
+/* Hari tantangan 7 hari */
+.day {
+    --tint: transparent;
+    color: var(--ink);
+}
+
+.day.done {
+    --tint: transparent;
+    color: #0b514d;
+    font-weight: 700;
+}
+
+/* Tombol Simulasi klik (di atas pil gelap, jadi pakai tepi versi dark-mode) */
+#prototype-tools button {
+    --tint: transparent;
+    --glass-ring: var(--glass-ring-dark);
+    color: #fff;
+}
+
+
+/* ========================================
+   12. RESPONSIVE / MOBILE
+======================================== */
+
+@media (max-width: 700px) {
+
+    header {
+        height: auto;
+        min-height: 68px;
+        padding: 12px 16px;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .brand {
+        gap: 10px;
+        font-size: 18px;
+    }
+
+    .brand img {
+        width: 32px;
+        height: 32px;
+    }
+
+    nav {
+        gap: 14px;
+    }
+
+    nav button {
+        font-size: 15px;
+    }
+
+    .inner {
+        padding: 22px 16px;
+    }
+
+    .hero,
+    .why,
+    .popular,
+    .challenge-home {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .grid3 {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .days {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+
+    .challenge-page {
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 22px 16px;
+    }
+
+    .team {
+        gap: 10px;
+    }
+
+    .member {
+        min-width: unset;
+        padding: 13px;
+    }
+
+    .contact-box {
+        min-height: unset;
+    }
+
+    .contact-box p,
+    .about-box p,
+    .about-box b,
+    .feature p,
+    .feature b {
+        font-size: 17px;
+    }
+
+    footer {
+        padding: 12px 16px;
+        height: auto;
+        min-height: 56px;
+        font-size: 13px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    .exercise-image {
+        height: 145px;
+    }
+}

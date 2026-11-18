@@ -1,0 +1,12 @@
+{
+  "name": "first-step",
+  "version": "1.0.0",
+  "private": true,
+  "description": "First Step: panduan kebugaran dan olahraga ringan untuk mahasiswa (website statis HTML, CSS, JavaScript).",
+  "author": "Kelompok 4 - Tim First Step",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "npx --yes serve .",
+    "dev": "npx --yes serve . -l 3000"
+  }
+}

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>First Step — Prototype Interaktif</title>
+
+    <!-- Favicon (logo First Step di tab browser) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon-180.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+    >
+
+    <!-- CSS Website -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ==================================
+         HEADER DAN NAVIGASI
+    =================================== -->
+
+    <header>
+
+        <!-- LOGO -->
+        <a class="brand" href="#" onclick="showPage('home'); return false">
+            <img src="assets/first-step-logo-512.png" alt="First Step Logo" width="28" height="28">
+            <span>First Step</span>
+        </a>
+
+        <nav aria-label="Navigasi">
+            <button class="active" data-page="home">Home</button>
+            <button data-page="about">About</button>
+            <button data-page="latihan">Latihan</button>
+            <button data-page="contact">Contact</button>
+        </nav>
+
+    </header>
+
+
+    <!-- ==================================
+         KONTEN UTAMA WEBSITE
+    =================================== -->
+
+    <main>
+
+        <!-- HALAMAN HOME -->
+
+        <section class="page active" id="home">
+
+            <div class="hero">
+
+                <h1>Semua dimulai dari satu langkah kecil</h1>
+
+                <p>
+                    Panduan kebugaran dan olahraga ringan untuk mahasiswa.
+                </p>
+
+                <div class="actions">
+                    <button class="btn" onclick="showPage('latihan')">
+                        Mulai Latihan
+                    </button>
+
+                    <button class="btn orange" onclick="showPage('about')">
+                        Tentang Kami
+                    </button>
+                </div>
+
+                <div class="hero-image">
+                    [Gambar hero]
+                </div>
+
+            </div>
+
+
+            <!-- KEUNGGULAN WEBSITE -->
+
+            <div class="why">
+
+                <h2>Kenapa First Step?</h2>
+
+                <div class="grid3">
+
+                    <div class="feature dashed">
+                        <b>Singkat</b>
+                        <p>[Teks 1 kalimat]</p>
+                    </div>
+
+                    <div class="feature dashed">
+                        <b>Tanpa alat</b>
+                        <p>[Teks 1 kalimat]</p>
+                    </div>
+
+                    <div class="feature dashed">
+                        <b>Bertahap</b>
+                        <p>[Teks 1 kalimat]</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LATIHAN POPULER -->
+
+            <div class="popular">
+
+                <h2>Latihan populer</h2>
+
+                <div class="grid3" id="popularCards"></div>
+
+                <button class="btn all-button" onclick="showPage('latihan')">
+                    Lihat semua latihan
+                </button>
+
+            </div>
+
+
+            <!-- TANTANGAN 7 HARI -->
+
+            <div class="challenge-home">
+
+                <h2>Coba Tantangan 7 Hari</h2>
+
+                <button
+                    class="btn"
+                    onclick="showPage('latihan'); setTimeout(() => document.getElementById('challengeSection').scrollIntoView({ behavior: 'smooth' }), 250)"
+                >
+                    Mulai
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- HALAMAN LATIHAN -->
+
+        <section class="page" id="latihan">
+
+            <div class="inner">
+
+                <h1>Latihan untuk Mahasiswa</h1>
+
+                <div class="filters" id="filters"></div>
+
+                <div class="grid3 training-grid" id="trainingCards"></div>
+
+
+                <!-- TANTANGAN 7 HARI -->
+
+                <div class="challenge-page" id="challengeSection">
+
+                    <h1>Tantangan 7 Hari</h1>
+
+                    <div class="days" id="days"></div>
+
+                    <div class="progress">
+                        <span id="progressFill"></span>
+                    </div>
+
+                    <p id="progressText">
+                        Progress: 1 dari 7 hari
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HALAMAN ABOUT -->
+
+        <section class="page" id="about">
+
+            <div class="inner">
+
+                <h1>Tentang First Step</h1>
+
+                <div class="about-box dashed">
+                    <b>Latar belakang</b>
+                    <p>
+                        [Cerita singkat: mahasiswa sulit memulai olahraga]
+                    </p>
+                </div>
+
+                <div class="about-box dashed">
+                    <b>Tujuan</b>
+                    <p>[3–4 poin tujuan website]</p>
+                </div>
+
+
+                <!-- ANGGOTA KELOMPOK -->
+
+                <h2 class="team-title">Tim</h2>
+
+                <div class="team">
+
+                    <div class="member dashed">
+                        <p>Aditya</p>
+                        <p>UI/UX</p>
+                    </div>
+
+                    <div class="member dashed">
+                        <p>Tonishon</p>
+                        <p>Developer A</p>
+                    </div>
+
+                    <div class="member dashed">
+                        <p>Fahmi</p>
+                        <p>Koordinator</p>
+                    </div>
+
+                    <div class="member dashed">
+                        <p>Hilmi</p>
+                        <p>Developer B</p>
+                    </div>
+
+                    <div class="member dashed">
+                        <p>Verdy</p>
+                        <p>Konten</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HALAMAN CONTACT -->
+
+        <section class="page" id="contact">
+
+            <div class="inner">
+
+                <h1>Hubungi Kami</h1>
+
+                <div class="contact-grid">
+
+
+                    <!-- INFORMASI KONTAK -->
+
+                    <div class="contact-box dashed">
+
+                        <h2>Info kontak</h2>
+
+                        <p>Email: [EMAIL KELOMPOK]</p>
+                        <p>Instagram: [AKUN KELOMPOK]</p>
+
+                        <div class="group">
+
+                            <p>
+                                <b>Kelompok 4 – Tim First Step</b>
+                            </p>
+
+                            <p>
+                                <b>Fahmi (Ketua)</b> – Koordinator, Contact
+                            </p>
+
+                            <p>
+                                <b>Aditya</b> – UI/UX designer
+                            </p>
+
+                            <p>
+                                <b>Toni</b> – Developer: Home, navbar, footer
+                            </p>
+
+                            <p>
+                                <b>Hilmi</b> – Developer: Latihan dan JavaScript
+                            </p>
+
+                            <p>
+                                <b>Verdy</b> – Konten dan dokumentasi
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FORMULIR KONTAK -->
+
+                    <form class="contact-box dashed" id="contactForm">
+
+                        <div class="field">
+
+                            <label for="name">Nama</label>
+
+                            <input
+                                id="name"
+                                placeholder="Nama lengkap"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="email">Email</label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                placeholder="nama@email.com"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="message">Pesan</label>
+
+                            <textarea
+                                id="message"
+                                placeholder="Tulis pesan"
+                                required
+                            ></textarea>
+
+                        </div>
+
+                        <button class="btn send" type="submit">
+                            Kirim
+                        </button>
+
+                    </form>
+
+                </div>
+
+                <p class="demo-note">
+                    Formulir ini simulasi (demo), pesan tidak benar-benar terkirim.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==================================
+         FOOTER
+    =================================== -->
+
+    <footer>
+        First Step · Konten edukasi umum, bukan pengganti tenaga kesehatan ·
+        Sumber gambar: [ISI SUMBER]
+    </footer>
+
+
+    <!-- ==================================
+         TOOLS PROTOTYPE
+    =================================== -->
+
+    <div id="prototype-tools">
+
+        <span>Prototype</span>
+
+        <button id="play">
+            ▶ Simulasi klik
+        </button>
+
+    </div>
+
+
+    <!-- NOTIFIKASI -->
+
+    <div class="toast" id="toast"></div>
+
+
+    <!-- ==================================
+         MODAL DETAIL LATIHAN
+    =================================== -->
+
+    <div
+        class="modal"
+        id="modal"
+        onclick="if(event.target === this) closeModal()"
+    >
+
+        <div class="modal-content">
+
+            <button class="close" onclick="closeModal()">
+                ×
+            </button>
+
+            <h2 id="modalTitle">Latihan</h2>
+
+            <p id="modalText">
+                Detail latihan.
+            </p>
+
+            <button class="btn" onclick="closeModal()">
+                Tutup
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
